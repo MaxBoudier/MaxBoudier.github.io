@@ -30,7 +30,8 @@ let currentViewKey = 'about';
  * @param {string} key - The key of the content to display (e.g., 'about', 'skills').
  */
 function displayContent(key) {
-    if (currentViewKey === key) return; // Do nothing if the same key is clicked
+    // Do nothing if the same key is clicked, unless it's the first load
+    if (currentViewKey === key && dom.contentContainer.dataset.loaded) return; 
 
     currentViewKey = key;
     const data = allContent[currentLang].cvData[key];
@@ -53,6 +54,7 @@ function displayContent(key) {
 
         // 3. Remove loading class to trigger fade-in
         dom.contentContainer.classList.remove('loading');
+        dom.contentContainer.dataset.loaded = true; // Mark as loaded
     }, 200); // This duration should match the fade-out transition in CSS
 
     // 4. Update menu button states

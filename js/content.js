@@ -26,7 +26,7 @@ export const allContent = {
 <p class="mb-4">> Actuellement en alternance chez <strong class="text-white">EssilorLuxottica</strong> (Créteil, France).</p>
 <p class="mb-4">> En recherche active d'un <strong class="text-white">stage à l'international</strong> pour l'été 2026.</p>
 <p>> Passionné par l'informatique depuis mon plus jeune âge, toujours à l'affût des nouvelles technologies.</p>
-<button id="gemini-button" class="gemini-button">✨ Interroger l'IA sur ce candidat</button>
+<button id="gemini-button" class="gemini-button">Interroger l'IA</button>
 `
             },
             'skills': {
@@ -117,8 +117,8 @@ export const allContent = {
 <ul class="list-none space-y-3 text-lg">
     <li><strong class="text-gray-400">Email :</strong> <a href="mailto:boudierm@essilor.fr">boudierm@essilor.fr</a></li>
     <li><strong class="text-gray-400">LinkedIn :</strong> <a href="https://www.linkedin.com/in/boudier-maxime" target="_blank">linkedin.com/in/boudier-maxime</a></li>
-    <li><strong class="text-gray-400">Téléphone :</strong> <span>+33 6 21 63 65 49</span></li>
-    <li><strong class="text-gray-400">Localisation :</strong> <span>Créteil (94000), France</span></li>
+    <li><strong class="text-gray-400">Téléphone :</strong> +33 6 21 63 65 49</li>
+    <li><strong class="text-gray-400">Localisation :</strong> Créteil (94000), France</li>
 </ul>
 `
             }
@@ -150,9 +150,8 @@ Projets & Récompenses:
 `,
         systemPrompt: "Tu es un assistant IA pour recruteur. Ton unique but est de répondre aux questions sur le candidat Maxime Boudier en te basant *strictement* et *uniquement* sur le résumé du CV fourni dans le contexte. N'invente *jamais* d'information. Si l'information n'est pas dans le CV, réponds poliment que l'information n'est pas disponible. Réponds toujours en français.",
         chatGreeting: "Bonjour ! Je suis un assistant IA. Posez-moi vos questions sur le CV de Maxime.",
-        chatPlaceholder: "Posez une question sur le CV...",
-        chatThinking: "Analyse en cours...",
-        chatSend: "[ENVOYER]",
+        chatPlaceholder: "Posez une question...",
+        chatSend: "ENVOYER",
         chatError: "Désolé, une erreur est survenue. Veuillez réessayer."
     },
     'en': {
@@ -173,7 +172,7 @@ Projets & Récompenses:
 <p class="mb-4">> Currently in a work-study program at <strong class="text-white">EssilorLuxottica</strong> (Créteil, France).</p>
 <p class="mb-4">> Actively seeking an <strong class="text-white">international internship</strong> for summer 2026.</p>
 <p>> Passionate about computer science since a young age, always keeping up with new technologies.</p>
-<button id="gemini-button" class="gemini-button">✨ Ask AI about this candidate</button>
+<button id="gemini-button" class="gemini-button">Ask AI</button>
 `
             },
             'skills': {
@@ -264,8 +263,8 @@ Projets & Récompenses:
 <ul class="list-none space-y-3 text-lg">
     <li><strong class="text-gray-400">Email:</strong> <a href="mailto:boudierm@essilor.fr">boudierm@essilor.fr</a></li>
     <li><strong class="text-gray-400">LinkedIn:</strong> <a href="https://www.linkedin.com/in/boudier-maxime" target="_blank">linkedin.com/in/boudier-maxime</a></li>
-    <li><strong class="text-gray-400">Phone:</strong> <span>+33 6 21 63 65 49</span></li>
-    <li><strong class="text-gray-400">Location:</strong> <span>Créteil (94000), France</span></li>
+    <li><strong class="text-gray-400">Phone:</strong> +33 6 21 63 65 49</li>
+    <li><strong class="text-gray-400">Location:</strong> Créteil (94000), France</li>
 </ul>
 `
             }
@@ -297,9 +296,8 @@ Projects & Awards:
 `,
         systemPrompt: "You are an AI assistant for recruiters. Your sole purpose is to answer questions about the candidate, Maxime Boudier, based *strictly* and *only* on the provided CV summary context. Do *not* invent information. If the information is not in the CV, politely state that the information is not available. Always answer in English.",
         chatGreeting: "Hello! I am an AI assistant. You can ask me questions about Maxime's resume.",
-        chatPlaceholder: "Ask a question about the resume...",
-        chatThinking: "Analyzing...",
-        chatSend: "[SEND]",
+        chatPlaceholder: "Ask a question...",
+        chatSend: "SEND",
         chatError: "Sorry, an error occurred. Please try again."
     }
 };
