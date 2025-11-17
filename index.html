@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxime Boudier - CV IA 8-bit</title>
+
+    <!-- 1. Tailwind CSS (pour le prototypage rapide) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 2. Google Fonts (Inter pour le corps, Press Start 2P pour les titres) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- 3. Styles CSS personnalisés -->
+    <style>
+        /* Variable CSS pour la couleur d'accent dynamique */
+        :root {
+            --current-accent: #3b82f6; /* Bleu par défaut */
+        }
+
+        /* Fond "Dot Grid" */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* bg-slate-900 */
+            color: #e2e8f0; /* text-slate-200 */
+            background-image: radial-gradient(#1e293b 1px, transparent 1px); /* bg-slate-800 dots */
+            background-size: 16px 16px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Police "Pixel" pour les accents */
+        .pixel-font {
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        /* Titre principal - utilise la couleur d'accent */
+        #main-title {
+            color: var(--current-accent);
+            transition: color 0.3s ease;
+            text-shadow: 0 0 8px var(--current-accent);
+        }
+
+        /* Conteneurs de style "fenêtre" */
+        #menu-container,
+        #content-container {
+            background-color: #1e293b; /* bg-slate-800 */
+            border: 2px solid #334155; /* border-slate-700 */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        /* Fenêtre de contenu avec "glow" dynamique */
+        #content-container {
+            border-color: var(--current-accent);
+            box-shadow: 0 0 16px 0px var(--current-accent);
+        }
+
+        /* Boutons de menu */
+        .menu-button {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.8rem;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-width: 2px;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .menu-button:not(.active):hover {
+            transform: scale(1.03);
+        }
+
+        /* Contenu scrollable */
+        #content-body {
+            height: 60vh; /* Hauteur fixe pour le scroll */
+            overflow-y: auto;
+            padding-right: 1rem; /* Espace pour la scrollbar */
+            transition: opacity 0.3s ease;
+        }
+
+        /* Scrollbar stylisée */
+        #content-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        #content-body::-webkit-scrollbar-track {
+            background: #334155; /* slate-700 */
+        }
+        #content-body::-webkit-scrollbar-thumb {
+            background-color: var(--current-accent); /* Couleur dynamique */
+            border-radius: 4px;
+        }
+        
+        /* Styles pour le contenu HTML dans .content-block */
+        .content-block {
+            border-bottom: 2px solid #334155; /* border-slate-700 */
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        .content-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        /* Liens dans le contenu */
+        #content-body a {
+            color: var(--current-accent);
+            text-decoration: underline;
+            transition: filter 0.2s;
+        }
+        #content-body a:hover {
+            filter: brightness(1.2);
+        }
+        
+        /* Classes utilitaires pour la couleur dynamique */
+        .dynamic-accent-text { color: var(--current-accent); }
+        .dynamic-accent-border { border-color: var(--current-accent); }
+        .dynamic-accent-bg { background-color: var(--current-accent); }
+        
+        /* Bouton "Ask AI" */
+        .gemini-button {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.75rem;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--current-accent);
+            color: var(--current-accent);
+            background-color: transparent;
+            transition: all 0.2s ease;
+            text-shadow: 0 0 4px var(--current-accent);
+        }
+        .gemini-button:hover {
+            background-color: var(--current-accent);
+            color: #0f172a; /* bg-slate-900 */
+            box-shadow: 0 0 12px var(--current-accent);
+            transform: scale(1.03);
+        }
+
+        /* --- STYLES MODALE GEMINI --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(15, 23, 42, 0.8); /* slate-900 avec opacité */
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .modal-content {
+            background-color: #1e293b; /* bg-slate-800 */
+            border: 2px solid var(--current-accent);
+            box-shadow: 0 0 24px 0px var(--current-accent);
+            width: 90%;
+            max-width: 700px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #334155; /* slate-700 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-chat-window {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        /* Styles pour bulles de chat */
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            max-width: 80%;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+        .chat-bubble.user {
+            background-color: #334155; /* slate-700 */
+            color: #f1f5f9; /* slate-100 */
+            align-self: flex-end;
+            border-radius: 1rem 1rem 0 1rem;
+        }
+        .chat-bubble.ai {
+            background-color: #0f172a; /* slate-900 */
+            color: #cbd5e1; /* slate-300 */
+            align-self: flex-start;
+            border-radius: 1rem 1rem 1rem 0;
+            border: 1px solid #334155;
+        }
+        .chat-bubble.thinking {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .modal-input-form {
+            display: flex;
+            padding: 1rem;
+            border-top: 2px solid #334155; /* slate-700 */
+        }
+        .modal-input-field {
+            flex-grow: 1;
+            background-color: #0f172a; /* slate-900 */
+            border: 1px solid #334155; /* slate-700 */
+            color: #f1f5f9; /* slate-100 */
+            padding: 0.75rem 1rem;
+            outline: none;
+        }
+        .modal-input-field:focus {
+            border-color: var(--current-accent);
+            box-shadow: 0 0 8px var(--current-accent);
+        }
+        .modal-send-button {
+            font-family: 'Press Start 2P', monospace;
+            padding: 0.75rem 1rem;
+            background-color: var(--current-accent);
+            color: #0f172a; /* slate-900 */
+            border: none;
+            cursor: pointer;
+            transition: filter 0.2s;
+        }
+        .modal-send-button:hover {
+            filter: brightness(1.2);
+        }
+
+        .modal-close-button {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.5rem; /* Ajusté pour la nouvelle police */
+            color: #64748b; /* text-slate-500 */
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close-button:hover {
+            color: var(--current-accent);
+        }
+        
+        /* Styles pour les boutons de langue */
+        #lang-fr-btn, #lang-en-btn {
+            font-size: 0.8rem;
+        }
+        
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Conteneur principal -->
+    <div class="max-w-6xl mx-auto">
+        
+        <div class="flex justify-between items-start mb-8">
+            <!-- Titre principal (maintenant avec ID) -->
+            <h1 id="main-title" class="pixel-font text-4xl md:text-5xl">MB-AI_v2.0</h1>
+            
+            <!-- Sélecteur de langue -->
+            <div class="pixel-font text-lg flex gap-2">
+                <button id="lang-fr-btn" class="px-3 py-1 border-2 border-slate-500 text-slate-500 transition-all duration-200">[FR]</button>
+                <button id="lang-en-btn" class="px-3 py-1 border-2 border-slate-500 text-slate-500 transition-all duration-200">[EN]</button>
+            </div>
+        </div>
+        
+        <div class="flex flex-col md:flex-row gap-8">
+            
+            <!-- Menu (gauche) -->
+            <nav id="menu-container" class="w-full md:w-1/3 p-4">
+                <div class="flex flex-col space-y-3">
+                    <button data-content-key="about" class="menu-button">[ À PROPOS ]</button>
+                    <button data-content-key="skills" class="menu-button">[ SKILLS ]</button>
+                    <button data-content-key="experience" class="menu-button">[ EXPÉRIENCE ]</button>
+                    <button data-content-key="education" class="menu-button">[ FORMATION ]</button>
+                    <button data-content-key="assets" class="menu-button">[ PROJETS ]</button>
+                    <button data-content-key="contact" class="menu-button">[ CONTACT ]</button>
+                </div>
+            </nav>
+
+            <!-- Fenêtre de contenu (droite) -->
+            <main id="content-container" class="w-full md:w-2/3 p-6 md:p-8">
+                <!-- Titre de la section (avec effet typewriter) -->
+                <h2 id="content-title" class="pixel-font text-3xl text-white mb-6 border-b-2 border-slate-600 pb-4"></h2>
+                
+                <!-- Contenu de la section (scrollable) -->
+                <div id="content-body">
+                    <!-- Le contenu sera injecté ici par JS -->
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Modale Gemini (cachée par défaut) -->
+    <div id="gemini-modal-overlay" class="modal-overlay hidden">
+        <div id="gemini-modal-content" class="modal-content">
+            <div class="modal-header">
+                <h3 class="pixel-font text-xl dynamic-accent-text">[ IA - Assistant Recruteur ]</h3>
+                <button id="gemini-modal-close" class="modal-close-button">[x]</button>
+            </div>
+            
+            <!-- Fenêtre de chat -->
+            <div id="gemini-chat-window" class="modal-chat-window">
+                <!-- Les messages de chat seront injectés ici -->
+            </div>
+            
+            <!-- Barre de saisie -->
+            <div class="modal-input-bar">
+                <!-- Formulaire de saisie -->
+                <form id="gemini-chat-form" class="modal-input-form">
+                    <input type="text" id="gemini-chat-input" class="modal-input-field" placeholder="Posez une question sur le CV..." autocomplete="off">
+                    <button type="submit" id="gemini-chat-send-btn" class="modal-send-button pixel-font text-sm">[ENVOYER]</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 4. Le JavaScript pour l'interactivité -->
+    <script>
+        // --- 1. SÉLECTEURS DOM ---
+        const contentTitle = document.getElementById('content-title');
+        const contentBody = document.getElementById('content-body');
+        const contentWindow = document.getElementById('content-container');
+        const menuButtons = document.querySelectorAll('.menu-button');
+        const mainTitle = document.getElementById('main-title'); // Récupérer le titre principal
+        const langFrBtn = document.getElementById('lang-fr-btn');
+        const langEnBtn = document.getElementById('lang-en-btn');
+        const geminiChatSendBtn = document.getElementById('gemini-chat-send-btn');
+
+        // Sélecteurs pour la modale Gemini
+        const modalOverlay = document.getElementById('gemini-modal-overlay');
+        const modalContent = document.getElementById('gemini-modal-content');
+        const modalCloseBtn = document.getElementById('gemini-modal-close');
+        const chatWindow = document.getElementById('gemini-chat-window');
+        const chatForm = document.getElementById('gemini-chat-form');
+        const chatInput = document.getElementById('gemini-chat-input');
+
+        // --- 2. ÉTAT GLOBAL ---
+        let currentLang = 'fr';
+        let currentViewKey = 'about';
+
+        // --- 3. CONFIGURATION & CONTENU ---
+
+        // Configuration de l'API Gemini
+        // IMPORTANT: L'API Key est laissée vide. Elle sera fournie par l'environnement d'exécution.
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // Définir la palette de couleurs
+        const colorMap = {
+            'about':      { hex: '#3b82f6', border: 'border-blue-500',  text: 'text-blue-500',  hover: 'hover:bg-blue-500',  bg: 'bg-blue-500' },
+            'skills':     { hex: '#ef4444', border: 'border-red-500',   text: 'text-red-500',   hover: 'hover:bg-red-500',   bg: 'bg-red-500' },
+            'experience': { hex: '#f97316', border: 'border-orange-500',text: 'text-orange-500',hover: 'hover:bg-orange-500',bg: 'bg-orange-500' },
+            'education':  { hex: '#10b981', border: 'border-emerald-500',text: 'text-emerald-500',hover: 'hover:bg-emerald-500',bg: 'bg-emerald-500' },
+            'assets':     { hex: '#eab308', border: 'border-yellow-500',text: 'text-yellow-500',hover: 'hover:bg-yellow-500',bg: 'bg-yellow-500' },
+            'contact':    { hex: '#ec4899', border: 'border-pink-500',  text: 'text-pink-500',  hover: 'hover:bg-pink-500',  bg: 'bg-pink-500' }
+        };
+
+        // Contenu du CV (formaté en HTML lisible)
+        const allContent = {
+            'fr': {
+                menu: {
+                    'about': '[ À PROPOS ]',
+                    'skills': '[ SKILLS ]',
+                    'experience': '[ EXPÉRIENCE ]',
+                    'education': '[ FORMATION ]',
+                    'assets': '[ PROJETS ]',
+                    'contact': '[ CONTACT ]'
+                },
+                cvData: {
+                    'about': {
+                        title: "Exécution: [about_me.exe]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Maxime Boudier</h3>
+<p class="mb-4">Engineer Student in AI and Big Data</p>
+<p class="mb-4">> Actuellement en alternance chez <strong class="text-white">EssilorLuxottica</strong> (Créteil, France).</p>
+<p class="mb-4">> En recherche active d'un <strong class="text-white">stage à l'international</strong> pour l'été 2026.</p>
+<p>> Passionné par l'informatique depuis mon plus jeune âge, toujours à l'affût des nouvelles technologies.</p>
+<button id="gemini-button" class="gemini-button">✨ Interroger l'IA sur ce candidat</button>
+`
+                    },
+                    'skills': {
+                        title: "Lecture: [skills.dat]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Compétences Techniques</h3>
+<h4 class="font-bold dynamic-accent-text mt-4 text-xl">Data Analysis</h4>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+    <li>Dashbording (Dash)</li>
+    <li>Data processing (Azure Databricks)</li>
+    <li>Databases (SQL, Azure Datalakes)</li>
+</ul>
+<h4 class="font-bold dynamic-accent-text mt-6 text-xl">Development Languages</h4>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+    <li>Python (Advanced)</li>
+    <li>Java (Advanced)</li>
+    <li>C#, VBA, JavaScript (frameworks)</li>
+</ul>
+<h4 class="font-bold dynamic-accent-text mt-6 text-xl">Méthodes</h4>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+    <li>Agiles Methods</li>
+    <li>Project Management</li>
+</ul>
+<h3 class="text-2xl font-bold text-white mt-8 mb-4">Soft Skills</h3>
+<ul class="list-none space-y-3">
+    <li><strong class="dynamic-accent-text">> Autonomous Work:</strong> Habitué à travailler en autonomie, à faire des recherches et à proposer des idées (cf. Pinette PEI).</li>
+    <li><strong class="dynamic-accent-text">> Team-working:</strong> Expérience en équipe, participation aux réunions et débats (Projets scolaires, Defi Chal'Enge, Entrep').</li>
+    <li><strong class="dynamic-accent-text">> Veille Technologique:</strong> Constant computer sciences monitoring.</li>
+</ul>
+`
+                    },
+                    'experience': {
+                        title: "Chargement: [experience.log]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Expérience Professionnelle</h3>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">Work-study Data Scientist</h4>
+  <p class="text-gray-400 font-medium">EssilorLuxottica @ Créteil, France | Sept. 2024 - Sept. 2027</p>
+  <p class="mt-2">Mission: Dashbording and Data Analysis to improve quality and reliability. Data Analysis on real life data.</p>
+</div>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">Work-study 4.0 Integrator</h4>
+  <p class="text-gray-400 font-medium">Pinette PEI @ Chalon sur Saône, France | Sept. 2022 - Aug. 2024</p>
+  <p class="mt-2">Mission: Research and Developement in 4.0 Solution for industry (Intern App, VR/AR, Robot Supervision App, Research for AI integration...).</p>
+</div>
+`
+                    },
+                    'education': {
+                        title: "Analyse: [education.db]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Formation & Diplômes</h3>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">AI / Big Data Engineer Degree</h4>
+  <p class="text-gray-400 font-medium">CNAM (Conservatoire National des Arts et Métiers) @ Chalon-sur-Saone | Sept. 2024 - Aug. 2027</p>
+  <p class="mt-2">Modules: Algorithm, Statistics, Probability, Computing Sciences, Virtual Reality, Data Analysis, Regression.</p>
+</div>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">Computing Science Licence</h4>
+  <p class="text-gray-400 font-medium">CNAM @ Chalon-sur-Saone | Sept. 2021 - Aug. 2024</p>
+  <p class="mt-2">Modules: Development (Java), Databases (SQL), Networks, HTML/CSS/JS/PHP, Project Management.</p>
+</div>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">Engineer scientific high school degree</h4>
+  <p class="text-gray-400 font-medium">Henri Vincenot High School @ Louhans | Sept. 2017 - July 2020</p>
+</div>
+`
+                    },
+                    'assets': {
+                        title: "Compilation: [assets.bin]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Projets & Récompenses</h3>
+<div class="content-block">
+    <h4 class="text-xl font-bold text-white">Entrep' (2023/2024 Edition)</h4>
+    <p class="font-medium dynamic-accent-text">>> Jury's favorite Award</p>
+    <p class="mt-2">Apprentissage de la création d'entreprise (Business Plan, Market Analysis, Product Development, etc.)</p>
+</div>
+<div class="content-block">
+    <h4 class="text-xl font-bold text-white">Défi Chal'Enge (8th and 10th edition)</h4>
+    <p class="font-medium dynamic-accent-text">>> Innovation Prize (x2)</p>
+    <p class="mt-2">Participation au challenge entrepreneurial.</p>
+</div>
+`
+                    },
+                    'contact': {
+                        title: "Connexion: [contact.net]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Me Contacter</h3>
+<ul class="list-none space-y-3 text-lg">
+    <li><strong class="text-gray-400">Email:</strong> <a href="mailto:boudierm@essilor.fr">boudierm@essilor.fr</a></li>
+    <li><strong class="text-gray-400">LinkedIn:</strong> <a href="https://www.linkedin.com/in/boudier-maxime" target="_blank">linkedin.com/in/boudier-maxime</a></li>
+    <li><strong class="text-gray-400">Phone:</strong> <span>+33 6 21 63 65 49</span></li>
+    <li><strong class="text-gray-400">Location:</strong> <span>Créteil (94000), France</span></li>
+</ul>
+`
+                    }
+                },
+                // Contexte pour l'LLM (version texte pur du CV)
+                llmContext: `
+Résumé du CV de Maxime Boudier, Étudiant Ingénieur en IA et Big Data:
+À Propos:
+- En alternance chez EssilorLuxottica à Créteil.
+- Recherche un stage à l'international pour l'été 2026.
+- Passionné d'informatique et de nouvelles technologies.
+Compétences Techniques:
+- Data Analysis: Dashbording (Dash), Data processing (Azure Databricks), Databases (SQL, Azure Datalakes).
+- Langages: Python (Avancé), Java (Avancé), C#, VBA, JavaScript (frameworks).
+- Méthodes: Agiles, Gestion de projet.
+Soft Skills:
+- Travail autonome, recherche et proposition d'idées.
+- Travail en équipe (projets scolaires, Défi Chal'Enge, Entrep').
+- Veille technologique.
+Expérience Professionnelle:
+- Data Scientist (Alternance) @ EssilorLuxottica (2024-2027): Dashbording, Data Analysis pour qualité et fiabilité.
+- Intégrateur 4.0 (Alternance) @ Pinette PEI (2022-2024): R&D en solutions 4.0 pour l'industrie (App interne, VR/AR, Supervision Robot, intégration IA).
+Formation:
+- Diplôme d'Ingénieur IA / Big Data @ CNAM (2024-2027): Algorithmes, Statistiques, Probabilités, VR, Data Analysis.
+- Licence Informatique @ CNAM (2021-2024): Développement (Java), BDD (SQL), Réseaux, Web (HTML/CSS/JS/PHP).
+- Bac S-SI @ Lycée Henri Vincenot (2017-2020).
+Projets & Récompenses:
+- Entrep' (2023-2024): Prix "Coup de Cœur du Jury". Apprentissage de la création d'entreprise.
+- Défi Chal'Enge (8e & 10e éd.): Prix de l'Innovation (x2).
+`,
+                // Textes de l'IA
+                systemPrompt: "Tu es un assistant IA pour recruteur. Ton unique but est de répondre aux questions sur le candidat Maxime Boudier en te basant *strictement* et *uniquement* sur le résumé du CV fourni dans le contexte. N'invente *jamais* d'information. Si l'information n'est pas dans le CV, réponds poliment que l'information n'est pas disponible. Réponds toujours en français.",
+                chatGreeting: "Bonjour ! Je suis un assistant IA. Posez-moi vos questions sur le CV de Maxime.",
+                chatPlaceholder: "Posez une question sur le CV...",
+                chatThinking: "Analyse en cours...",
+                chatSend: "[ENVOYER]",
+                chatError: "Désolé, une erreur est survenue. Veuillez réessayer."
+            },
+            'en': {
+                menu: {
+                    'about': '[ ABOUT ]',
+                    'skills': '[ SKILLS ]',
+                    'experience': '[ EXPERIENCE ]',
+                    'education': '[ EDUCATION ]',
+                    'assets': '[ PROJECTS ]',
+                    'contact': '[ CONTACT ]'
+                },
+                cvData: {
+                    'about': {
+                        title: "Executing: [about_me.exe]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Maxime Boudier</h3>
+<p class="mb-4">Engineer Student in AI and Big Data</p>
+<p class="mb-4">> Currently in a work-study placement at <strong class="text-white">EssilorLuxottica</strong> (Créteil, France).</p>
+<p class="mb-4">> Actively looking for an <strong class="text-white">international internship</strong> for summer 2026.</p>
+<p>> Passionate about Computer Sciences since I was young, always on point on new technologies.</p>
+<button id="gemini-button" class="gemini-button">✨ Ask AI about this candidate</button>
+`
+                    },
+                    'skills': {
+                        title: "Reading: [skills.dat]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Technical Skills</h3>
+<h4 class="font-bold dynamic-accent-text mt-4 text-xl">Data Analysis</h4>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+    <li>Dashbording (Dash)</li>
+    <li>Data processing (Azure Databricks)</li>
+    <li>Databases (SQL, Azure Datalakes)</li>
+</ul>
+<h4 class="font-bold dynamic-accent-text mt-6 text-xl">Development Languages</h4>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+    <li>Python (Advanced)</li>
+    <li>Java (Advanced)</li>
+    <li>C#, VBA, JavaScript (frameworks)</li>
+</ul>
+<h4 class="font-bold dynamic-accent-text mt-6 text-xl">Methods</h4>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+    <li>Agiles Methods</li>
+    <li>Project Management</li>
+</ul>
+<h3 class="text-2xl font-bold text-white mt-8 mb-4">Soft Skills</h3>
+<ul class="list-none space-y-3">
+    <li><strong class="dynamic-accent-text">> Autonomous Work:</strong> Used to work autonomously, do research and suggest ideas (cf. Pinette PEI).</li>
+    <li><strong class="dynamic-accent-text">> Team-working:</strong> Know how to work as part of a team, participate in meetings and debates (School Projects, Defi Chal'Enge, Entrep').</li>
+    <li><strong class="dynamic-accent-text">> Computer Sciences Monitoring:</strong> Aware of news about my job and computer sciences.</li>
+</ul>
+`
+                    },
+                    'experience': {
+                        title: "Loading: [experience.log]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Work Experience</h3>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">Work-study Data Scientist</h4>
+  <p class="text-gray-400 font-medium">EssilorLuxottica @ Créteil, France | Sept. 2024 - Sept. 2027</p>
+  <p class="mt-2">Mission: Dashbording and Data Analysis to improve quality and reliability. Data Analysis on real life data.</p>
+</div>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">Work-study 4.0 Integrator</h4>
+  <p class="text-gray-400 font-medium">Pinette PEI @ Chalon sur Saône, France | Sept. 2022 - Aug. 2024</p>
+  <p class="mt-2">Mission: Research and Developement in 4.0 Solution for industry (Intern App, VR/AR, Robot Supervision App, Research for AI integration...).</p>
+</div>
+`
+                    },
+                    'education': {
+                        title: "Analyzing: [education.db]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Education & Degrees</h3>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">AI / Big Data Engineer Degree</h4>
+  <p class="text-gray-400 font-medium">CNAM (Conservatoire National des Arts et Métiers) @ Chalon-sur-Saone | Sept. 2024 - Aug. 2027</p>
+  <p class="mt-2">Modules: Algorithm, Statistics, Probability, Computing Sciences, Virtual Reality, Data Analysis, Regression.</p>
+</div>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">Computing Science Licence</h4>
+  <p class="text-gray-400 font-medium">CNAM @ Chalon-sur-Saone | Sept. 2021 - Aug. 2024</p>
+  <p class="mt-2">Modules: Development (Java), Databases (SQL), Networks, HTML/CSS/JS/PHP, Project Management.</p>
+</div>
+<div class="content-block">
+  <h4 class="text-xl font-bold text-white">Engineer scientific high school degree</h4>
+  <p class="text-gray-400 font-medium">Henri Vincenot High School @ Louhans | Sept. 2017 - July 2020</p>
+</div>
+`
+                    },
+                    'assets': {
+                        title: "Compiling: [assets.bin]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Projects & Awards</h3>
+<div class="content-block">
+    <h4 class="text-xl font-bold text-white">Entrep' (2023/2024 Edition)</h4>
+    <p class="font-medium dynamic-accent-text">>> Jury's favorite Award</p>
+    <p class="mt-2">Program to learn how to create a company (Business Plan, Market Analysis, Product Development, etc.)</p>
+</div>
+<div class="content-block">
+    <h4 class="text-xl font-bold text-white">Défi Chal'Enge (8th and 10th edition)</h4>
+    <p class="font-medium dynamic-accent-text">>> Innovation Prize (x2)</p>
+    <p class="mt-2">Participation in the entrepreneurial challenge.</p>
+</div>
+`
+                    },
+                    'contact': {
+                        title: "Connecting: [contact.net]",
+                        content: `
+<h3 class="text-2xl font-bold text-white mb-4">Contact Me</h3>
+<ul class="list-none space-y-3 text-lg">
+    <li><strong class="text-gray-400">Email:</strong> <a href="mailto:boudierm@essilor.fr">boudierm@essilor.fr</a></li>
+    <li><strong class="text-gray-400">LinkedIn:</strong> <a href="https://www.linkedin.com/in/boudier-maxime" target="_blank">linkedin.com/in/boudier-maxime</a></li>
+    <li><strong class="text-gray-400">Phone:</strong> <span>+33 6 21 63 65 49</span></li>
+    <li><strong class="text-gray-400">Location:</strong> <span>Créteil (94000), France</span></li>
+</ul>
+`
+                    }
+                },
+                // Contexte pour l'LLM (version texte pur du CV)
+                llmContext: `
+Resume of Maxime Boudier, Engineer Student in AI and Big Data:
+About:
+- Work-study placement at EssilorLuxottica in Créteil.
+- Looking for an international internship for summer 2026.
+- Passionate about computer sciences and new technologies.
+Technical Skills:
+- Data Analysis: Dashbording (Dash), Data processing (Azure Databricks), Databases (SQL, Azure Datalakes).
+- Languages: Python (Advanced), Java (Advanced), C#, VBA, JavaScript (frameworks).
+- Methods: Agile, Project Management.
+Soft Skills:
+- Autonomous work, research, and suggesting ideas.
+- Team-working (school projects, Défi Chal'Enge, Entrep').
+- Computer sciences monitoring.
+Work Experience:
+- Data Scientist (Work-study) @ EssilorLuxottica (2024-2027): Dashbording, Data Analysis for quality and reliability.
+- 4.0 Integrator (Work-study) @ Pinette PEI (2022-2024): R&D in 4.0 solutions for industry (Internal App, VR/AR, Robot Supervision, AI integration).
+Education:
+- AI / Big Data Engineer Degree @ CNAM (2024-2027): Algorithm, Statistics, Probability, VR, Data Analysis.
+- Computing Science Licence @ CNAM (2021-2024): Development (Java), DB (SQL), Networks, Web (HTML/CSS/JS/PHP).
+- Engineer scientific high school degree @ Henri Vincenot High School (2017-2020).
+Projects & Awards:
+- Entrep' (2023-2024): "Jury's favorite Award". Learning business creation.
+- Défi Chal'Enge (8th & 10th ed.): Innovation Prize (x2).
+`,
+                // Textes de l'IA
+                systemPrompt: "You are an AI assistant for recruiters. Your sole purpose is to answer questions about the candidate, Maxime Boudier, based *strictly* and *only* on the provided CV summary context. Do *not* invent information. If the information is not in the CV, politely state that the information is not available. Always answer in English.",
+                chatGreeting: "Hello! I am an AI assistant. You can ask me questions about Maxime's resume.",
+                chatPlaceholder: "Ask a question about the resume...",
+                chatThinking: "Analyzing...",
+                chatSend: "[SEND]",
+                chatError: "Sorry, an error occurred. Please try again."
+            }
+        };
+
+
+        // --- 4. FONCTIONS PRINCIPALES ---
+
+        // Fonction pour afficher le contenu
+        function displayContent(key) {
+            // Mettre à jour la vue active
+            currentViewKey = key;
+            const data = allContent[currentLang].cvData[key];
+            const color = colorMap[key];
+            
+            // 1. Mettre à jour la couleur d'accent globale
+            document.body.style.setProperty('--current-accent', color.hex);
+
+            // 2. Réinitialiser le scroll
+            contentWindow.scrollTop = 0;
+            
+            // 3. Effet "machine à écrire" pour le titre
+            contentTitle.innerHTML = ''; // Vider pour l'effet
+            typeWriter(data.title, contentTitle, 30, () => {
+                // Une fois le titre écrit, afficher le contenu (avec un fondu)
+                contentBody.style.opacity = 0;
+                contentBody.innerHTML = data.content;
+                
+                // Attacher l'écouteur pour le bouton Gemini s'il existe
+                const geminiButton = document.getElementById('gemini-button');
+                if (geminiButton) {
+                    geminiButton.addEventListener('click', handleAskAiClick);
+                }
+
+                // Simple effet de fondu
+                setTimeout(() => { contentBody.style.opacity = 1; }, 50); 
+            });
+
+            // 4. Gérer l'état "actif" des boutons
+            menuButtons.forEach(button => {
+                const buttonKey = button.dataset.contentKey;
+                const buttonColor = colorMap[buttonKey];
+                
+                if (buttonKey === key) {
+                    // C'est le bouton actif
+                    button.className = `menu-button active ${buttonColor.bg} text-slate-950`;
+                } else {
+                    // C'est un bouton inactif
+                    button.className = `menu-button ${buttonColor.border} ${buttonColor.text} ${buttonColor.hover} hover:text-slate-950`;
+                }
+            });
+        }
+
+        // Effet machine à écrire
+        let isTyping = false;
+        async function typeWriter(text, element, speed, onComplete) {
+            // Empêcher plusieurs appels simultanés
+            if (isTyping) return; 
+            isTyping = true;
+            
+            element.innerHTML = ''; // Vider l'élément
+            
+            for (let i = 0; i < text.length; i++) {
+                element.innerHTML += text.charAt(i);
+                await sleep(speed);
+            }
+            
+            isTyping = false;
+            if (onComplete) onComplete();
+        }
+
+        // Ajout des écouteurs d'événements aux boutons
+        menuButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const key = button.dataset.contentKey;
+                displayContent(key);
+            });
+        });
+
+        // Fonction pour simuler l'effet "machine à écrire"
+        // Helper de délai
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialiser les couleurs des boutons au chargement
+        function initButtons() {
+            menuButtons.forEach(button => {
+                const key = button.dataset.contentKey;
+                const color = colorMap[key];
+                button.className = `menu-button ${color.border} ${color.text} ${color.hover} hover:text-slate-950`;
+            });
+        }
+
+        // --- 5. GESTION DE LA LANGUE ---
+        
+        function updateLanguageUI() {
+            // Mettre à jour le style des boutons de langue
+            if (currentLang === 'fr') {
+                langFrBtn.className = "px-3 py-1 border-2 transition-all duration-200 dynamic-accent-text"; // Actif
+                langFrBtn.style.borderColor = 'var(--current-accent)';
+                langEnBtn.className = "px-3 py-1 border-2 border-slate-500 text-slate-500 transition-all duration-200"; // Inactif
+                langEnBtn.style.borderColor = '#64748b';
+            } else {
+                langEnBtn.className = "px-3 py-1 border-2 transition-all duration-200 dynamic-accent-text"; // Actif
+                langEnBtn.style.borderColor = 'var(--current-accent)';
+                langFrBtn.className = "px-3 py-1 border-2 border-slate-500 text-slate-500 transition-all duration-200"; // Inactif
+                langFrBtn.style.borderColor = '#64748b';
+            }
+
+            // Mettre à jour le texte des boutons de menu
+            menuButtons.forEach(button => {
+                const key = button.dataset.contentKey;
+                button.innerHTML = allContent[currentLang].menu[key];
+            });
+            
+            // Mettre à jour les textes de l'UI du chat
+            chatInput.placeholder = allContent[currentLang].chatPlaceholder;
+            geminiChatSendBtn.innerHTML = allContent[currentLang].chatSend;
+
+            // Rafraîchir le contenu affiché dans la nouvelle langue
+            displayContent(currentViewKey);
+        }
+
+        langFrBtn.addEventListener('click', () => {
+            currentLang = 'fr';
+            updateLanguageUI();
+        });
+
+        langEnBtn.addEventListener('click', () => {
+            currentLang = 'en';
+            updateLanguageUI();
+        });
+
+
+        // --- 6. FONCTIONS GEMINI ---
+
+        // Affiche la modale
+        function showModal() {
+            // Ajouter un message de bienvenue de l'IA
+            chatWindow.innerHTML = ''; // Nettoyer l'historique
+            addMessageToChat(allContent[currentLang].chatGreeting, 'ai');
+            modalOverlay.classList.remove('hidden');
+            chatInput.focus();
+        }
+
+        // Cache la modale
+        function closeModal() {
+            modalOverlay.classList.add('hidden');
+        }
+        
+        // Gère le clic sur le bouton "Interroger l'IA"
+        function handleAskAiClick() {
+            // Mettre à jour la couleur de la modale avant de l'afficher
+            const activeColor = colorMap[currentViewKey].hex;
+            modalContent.style.borderColor = activeColor;
+            modalContent.style.boxShadow = `0 0 24px 0px ${activeColor}`;
+            showModal();
+        }
+
+        // Gère la soumission du chat
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const userQuery = chatInput.value.trim();
+            if (userQuery === "") return;
+
+            // Ajouter le message utilisateur à la fenêtre
+            addMessageToChat(userQuery, 'user');
+            chatInput.value = ''; // Vider le champ
+
+            // Ajouter une bulle "thinking"
+            const thinkingId = `thinking-${Date.now()}`;
+            addMessageToChat(allContent[currentLang].chatThinking, 'ai', 'thinking', thinkingId);
+            chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll auto
+
+            // Obtenir la réponse de l'IA
+            try {
+                const aiResponse = await getAiResponse(userQuery);
+                // Remplacer la bulle "thinking" par la vraie réponse
+                const thinkingBubble = document.getElementById(thinkingId);
+                if (thinkingBubble) {
+                    thinkingBubble.id = ''; // Retirer l'ID pour arrêter de le chercher
+                    thinkingBubble.classList.remove('thinking');
+                    thinkingBubble.innerHTML = aiResponse; // Remplacer le contenu
+                } else {
+                    // Au cas où, ajouter comme nouveau message
+                    addMessageToChat(aiResponse, 'ai');
+                }
+            } catch (error) {
+                console.error("Erreur Gemini API:", error);
+                // Gérer l'erreur
+                const thinkingBubble = document.getElementById(thinkingId);
+                const errorMsg = allContent[currentLang].chatError;
+                if (thinkingBubble) {
+                    thinkingBubble.id = '';
+                    thinkingBubble.classList.remove('thinking');
+                    thinkingBubble.innerHTML = errorMsg;
+                } else {
+                    addMessageToChat(errorMsg, 'ai');
+                }
+            } finally {
+                chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll auto
+            }
+        }
+        
+        // Ajoute un message à la fenêtre de chat
+        function addMessageToChat(message, sender, type = '', id = '') {
+            const bubble = document.createElement('div');
+            bubble.classList.add('chat-bubble', sender);
+            if (type) bubble.classList.add(type);
+            if (id) bubble.id = id;
+            
+            // Sécurité simple : échapper le HTML
+            bubble.textContent = message; 
+            
+            chatWindow.appendChild(bubble);
+        }
+
+        // Fonction principale d'appel à l'API Gemini (renommée)
+        async function getAiResponse(userQuery) {
+            const systemPrompt = allContent[currentLang].systemPrompt;
+            
+            const prompt = `
+--- CONTEXTE CV (Source unique de vérité) ---
+${allContent[currentLang].llmContext}
+--- FIN CONTEXTTE ---
+
+Question du recruteur: "${userQuery}"
+
+Ta réponse (basée *uniquement* sur le contexte CV ci-dessus):`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            const candidate = result.candidates?.[0];
+
+            if (candidate && candidate.content?.parts?.[0]?.text) {
+                return candidate.content.parts[0].text;
+            } else {
+                throw new Error("Invalid API response structure");
+            }
+        }
+
+        // Écouteurs pour la modale
+        modalCloseBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        // Écouteur pour le formulaire de chat
+        chatForm.addEventListener('submit', handleChatSubmit);
+
+        // --- 7. INITIALISATION ---
+        initButtons();
+        updateLanguageUI(); // Remplace l'appel direct à displayContent
+
+    </script>
+</body>
+</html>
