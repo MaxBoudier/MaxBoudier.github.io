@@ -3,6 +3,7 @@ import { getAiResponse } from './gemini.js';
 
 // --- DOM SELECTORS ---
 const dom = {
+    contentContainer: document.getElementById('content-container'),
     mainTitle: document.getElementById('main-title'),
     contentTitle: document.getElementById('content-title'),
     contentBody: document.getElementById('content-body'),
@@ -21,7 +22,6 @@ const dom = {
 // --- STATE ---
 let currentLang = 'fr';
 let currentViewKey = 'about';
-let isTyping = false;
 
 // --- UI FUNCTIONS ---
 
@@ -30,49 +30,35 @@ let isTyping = false;
  * @param {string} key - The key of the content to display (e.g., 'about', 'skills').
  */
 function displayContent(key) {
+    if (currentViewKey === key) return; // Do nothing if the same key is clicked
+
     currentViewKey = key;
     const data = allContent[currentLang].cvData[key];
     const color = colorMap[key];
 
-    // 1. Update global accent color
-    document.documentElement.style.setProperty('--current-accent', color.hex);
+    // 1. Add loading class to trigger fade-out
+    dom.contentContainer.classList.add('loading');
 
-    // 2. Typewriter effect for the title
-    typeWriter(data.title, dom.contentTitle, () => {
-        // 3. Fade in content body
-        dom.contentBody.style.opacity = 0;
-        setTimeout(() => {
-            dom.contentBody.innerHTML = data.content;
-            dom.contentBody.scrollTop = 0;
-            dom.contentBody.style.opacity = 1;
-            attachGeminiButtonListener();
-        }, 150);
-    });
+    // 2. Update colors and content after fade-out
+    setTimeout(() => {
+        // Update global accent color
+        document.documentElement.style.setProperty('--current-accent', color.hex);
+
+        // Update titles and content
+        dom.contentTitle.textContent = data.title;
+        dom.contentBody.innerHTML = data.content;
+        dom.contentBody.scrollTop = 0;
+        
+        attachGeminiButtonListener();
+
+        // 3. Remove loading class to trigger fade-in
+        dom.contentContainer.classList.remove('loading');
+    }, 200); // This duration should match the fade-out transition in CSS
 
     // 4. Update menu button states
     dom.menuButtons.forEach(button => {
         button.classList.toggle('active', button.dataset.contentKey === key);
     });
-}
-
-/**
- * Simulates a typewriter effect for a given text element.
- * @param {string} text - The text to type out.
- * @param {HTMLElement} element - The HTML element to type into.
- * @param {function} onComplete - Callback function to execute when typing is finished.
- */
-async function typeWriter(text, element, onComplete) {
-    if (isTyping) return;
-    isTyping = true;
-    element.innerHTML = '';
-
-    for (let i = 0; i < text.length; i++) {
-        element.innerHTML += text.charAt(i);
-        await sleep(30);
-    }
-
-    isTyping = false;
-    if (onComplete) onComplete();
 }
 
 /**

@@ -125,3 +125,50 @@ body {
 .menu-button.active {
     color: var(--current-accent);
 }
+
+/* CONTENT */
+#content-container {
+    grid-area: content;
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s ease;
+}
+
+#content-title {
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #334155;
+    transition: opacity 0.2s ease-out;
+}
+
+#content-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 1rem; /* Scrollbar space */
+    opacity: 1;
+    transition: opacity 0.3s ease 0.1s; /* Delay the fade-in slightly */
+}
+
+#content-container.loading #content-title,
+#content-container.loading #content-body {
+    opacity: 0;
+}
+
+/* SCROLLBAR */
+#content-body::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+#content-body::-webkit-scrollbar-thumb {
+    background-color: #334155;
+    border-radius: 0.25rem;
+}
+
+#content-body::-webkit-scrollbar-thumb:hover {
+    background-color: #475569;
+}

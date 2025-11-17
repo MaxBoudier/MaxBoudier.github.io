@@ -1,10 +1,10 @@
 export const colorMap = {
     'about':      { hex: '#3b82f6' },
-    'skills':     { hex: '#ef4444' },
-    'experience': { hex: '#f97316' },
-    'education':  { hex: '#10b981' },
-    'assets':     { hex: '#eab308' },
-    'contact':    { hex: '#ec4899' }
+    'skills':     { hex: '#ea2020ff' },
+    'experience': { hex: '#f66600ff' },
+    'education':  { hex: '#1dc02bff' },
+    'assets':     { hex: '#ecc710ff' },
+    'contact':    { hex: '#ed2388ff' }
 };
 
 export const allContent = {
